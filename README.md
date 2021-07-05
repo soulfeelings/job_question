@@ -40,6 +40,8 @@ Promise.resolve().then(() => console.log('a'));
 setTimeout(() => console.log('a'), 0);
 ```
 
+ОТВЕТ: первый раньше, потому что это микрозадача, а вторая позже, потому что это макрозадача
+
 
 ## Что не так с компонентом?
 
@@ -53,6 +55,11 @@ const Search = ({ onChange, delay }) => {
 };
 ```
 
+ОТВЕТ: Вижу при размонтировании отменяется handleChange -> 
+Возможно return из useEffect надо сделать вот так
+```js
+useEffect(() => () => handleChange.cancel, []);
+```
 
 ## Напишите функцию, преобразующую объект в строку
 
@@ -65,4 +72,15 @@ console.assert(
     qsStringify({ a: 1, b: '@', c: '%' }) === 'a=1&b=%40&c=%25',
     'qsStringify should convert object to properly encoded querystring'
 );
+```
+
+ОТВЕТ: 
+(неглубокое преобразование)
+```js
+const qsStringify = (params) => {
+    return Object.entries(params).map(arr => {
+    	arr[1] = encodeURIComponent(arr[1]);
+        return arr.join('=')
+    }).join('&');
+};
 ```
